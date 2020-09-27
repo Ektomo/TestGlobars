@@ -15,8 +15,6 @@ class MapsViewModel(token: String) : ViewModel() {
         get() = _units
 
 
-
-
     init {
         getSession(token)
     }

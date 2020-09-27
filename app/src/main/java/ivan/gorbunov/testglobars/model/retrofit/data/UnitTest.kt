@@ -3,7 +3,6 @@ package ivan.gorbunov.testglobars.model.retrofit.data
 data class Units(
     val success: Boolean,
     val data: List<UnitTest>
-
 )
 
 data class UnitTest(

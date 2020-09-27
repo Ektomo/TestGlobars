@@ -19,7 +19,6 @@ class AuthorizationViewModel : ViewModel() {
         get() = _isSuccess
 
 
-
     fun getToken(user: UserLogin) {
         viewModelScope.launch {
             try {

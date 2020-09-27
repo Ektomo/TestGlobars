@@ -1,6 +1,6 @@
 package ivan.gorbunov.testglobars.model.retrofit.data
 
-data class Token (
+data class Token(
     val success: Boolean,
     val data: String
 )

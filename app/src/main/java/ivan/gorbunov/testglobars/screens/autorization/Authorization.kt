@@ -2,6 +2,7 @@ package ivan.gorbunov.testglobars.screens.autorization
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,13 +38,16 @@ class Authorization : Fragment() {
 
         val viewModel = ViewModelProvider(this).get(AuthorizationViewModel::class.java)
 
+        passwordField.setOnKeyListener(View.OnKeyListener { _, i, keyEvent ->
+            if ((keyEvent.action == KeyEvent.ACTION_DOWN) && (i == KeyEvent.KEYCODE_ENTER)) {
+                buttonEnter.performClick()
+            }
+            return@OnKeyListener true
+        })
+
+
         buttonEnter.setOnClickListener {
-            getToken(
-                viewModel,
-                nameField.text.toString().trim(),
-                passwordField.text.toString().trim()
-            )
-            progressBar.visibility = View.VISIBLE
+            makeLoadingProgress(viewModel)
         }
 
         viewModel.token.observe(viewLifecycleOwner, { tokenA ->
@@ -60,6 +64,15 @@ class Authorization : Fragment() {
         })
 
         return root
+    }
+
+    private fun makeLoadingProgress(viewModel: AuthorizationViewModel) {
+        getToken(
+            viewModel,
+            nameField.text.toString().trim(),
+            passwordField.text.toString().trim()
+        )
+        progressBar.visibility = View.VISIBLE
     }
 
     private fun getToken(viewModel: AuthorizationViewModel, name: String, password: String) {

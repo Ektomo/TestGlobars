@@ -1,6 +1,5 @@
 package ivan.gorbunov.testglobars.screens.map
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.view.*
 import android.widget.ProgressBar
@@ -16,7 +15,6 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.ui.IconGenerator
 import ivan.gorbunov.testglobars.R
 import ivan.gorbunov.testglobars.model.retrofit.data.UnitTest
-import ivan.gorbunov.testglobars.screens.autorization.AuthorizationViewModel
 
 class MapsFragment : Fragment() {
     private lateinit var viewModel: MapsViewModel
