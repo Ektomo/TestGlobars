@@ -8,6 +8,13 @@
     android:padding="24dp"
     tools:context=".screens.autorization.Authorization">
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/logo"
+        android:contentDescription="@string/logo" />
+
     <com.google.android.material.textfield.TextInputLayout
         style="@style/Widget.Test.TextInputLayout"
         android:layout_width="match_parent"

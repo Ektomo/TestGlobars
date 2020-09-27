@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ivan.gorbunov.testglobars.model.retrofit.GlobarApi
-import ivan.gorbunov.testglobars.model.retrofit.data.Session
 import ivan.gorbunov.testglobars.model.retrofit.data.UnitTest
 import kotlinx.coroutines.launch
 
@@ -14,6 +13,8 @@ class MapsViewModel(token: String) : ViewModel() {
     private val _units = MutableLiveData<List<UnitTest>>()
     val units: LiveData<List<UnitTest>>
         get() = _units
+
+
 
 
     init {
@@ -32,12 +33,12 @@ class MapsViewModel(token: String) : ViewModel() {
         }
     }
 
-    private fun getUnits(token: String, id: String){
+    private fun getUnits(token: String, id: String) {
         viewModelScope.launch {
-            try{
+            try {
                 val unitsFromTest = GlobarApi.retrofitService.getUnits(token, id)
                 _units.value = unitsFromTest.data
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 Log.d("Failure", "$e")
             }
         }

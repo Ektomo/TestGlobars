@@ -13,8 +13,8 @@
         <action
             android:id="@+id/action_authorization_to_mapsFragment"
             app:destination="@id/mapsFragment"
-            app:launchSingleTop="false"
-            app:popUpToInclusive="false" />
+            app:launchSingleTop="true"
+            app:popUpTo="@id/navigation" />
     </fragment>
     <fragment
         android:id="@+id/mapsFragment"
