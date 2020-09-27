@@ -61,6 +61,9 @@ class MapsFragment : Fragment() {
 
     private val callback = OnMapReadyCallback { map ->
         mapGoogle = map
+        val uiSettings = mapGoogle.uiSettings
+        uiSettings.isZoomControlsEnabled = true
+
         units.forEach {
             makeMarker(map, it)
         }
