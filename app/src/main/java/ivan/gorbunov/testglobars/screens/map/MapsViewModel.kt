@@ -11,16 +11,9 @@ import ivan.gorbunov.testglobars.model.retrofit.data.UnitTest
 import kotlinx.coroutines.launch
 
 class MapsViewModel(token: String) : ViewModel() {
-    private var _sessionId = MutableLiveData<String>()
-    val sessionId: LiveData<String>
-        get() = _sessionId
     private val _units = MutableLiveData<List<UnitTest>>()
     val units: LiveData<List<UnitTest>>
         get() = _units
-
-    private val _isSuccessSession = MutableLiveData<Boolean>()
-    val isSuccessSession: LiveData<Boolean>
-        get() = _isSuccessSession
 
 
     init {
@@ -30,23 +23,22 @@ class MapsViewModel(token: String) : ViewModel() {
     private fun getSession(token: String) {
         viewModelScope.launch {
             try {
-                val session = GlobarApi.retrofitService.getSession("Bearer $token")
+                val session = GlobarApi.retrofitService.getSession(token)
                 val id = session.data[0].id
-                getUnits(id)
-                Log.d("HOP", "LALA + $session")
+                getUnits(token, id)
             } catch (e: Exception) {
-                Log.d("HOP", "ZOPA + $e")
+                Log.d("Failure", "$e")
             }
         }
     }
 
-    private fun getUnits(id: String){
+    private fun getUnits(token: String, id: String){
         viewModelScope.launch {
             try{
-//                _units.value = GlobarApi.retrofitService.getUnits(id)
-                Log.d("HOP", "URA")
+                val unitsFromTest = GlobarApi.retrofitService.getUnits(token, id)
+                _units.value = unitsFromTest.data
             }catch (e: Exception){
-                Log.d("HOP", "$e")
+                Log.d("Failure", "$e")
             }
         }
     }

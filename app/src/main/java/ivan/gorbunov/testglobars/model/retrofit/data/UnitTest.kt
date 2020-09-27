@@ -11,5 +11,10 @@ data class UnitTest(
     val name: String,
     val checked: Boolean,
     val eye: Boolean,
-    val position: HashMap<String, String>
+    val position: Position
+)
+
+data class Position(
+    val lt: Double,
+    val ln: Double
 )

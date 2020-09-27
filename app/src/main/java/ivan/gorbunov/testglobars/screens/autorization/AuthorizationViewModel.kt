@@ -25,7 +25,7 @@ class AuthorizationViewModel : ViewModel() {
             try {
                 val callToken = GlobarApi.retrofitService.getToken(user)
                 _isSuccess.value = callToken.success
-                _token.value = callToken.data
+                _token.value = "Bearer ${callToken.data}"
             } catch (e: Exception) {
                 _isSuccess.value = false
                 _token.value = "Failure: $e"

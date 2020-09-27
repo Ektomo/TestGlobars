@@ -20,8 +20,8 @@ interface GlobarApiService {
     @GET("tracking/sessions")
     suspend fun getSession(@Header("Authorization") token: String): Session
 
-    @POST("tracking/{sessionId}/units")
-    suspend fun getUnits(@Path("sessionId") session: String, @Query("mobile") boolean: Boolean = true): Units
+    @GET("tracking/{sessionId}/units")
+    suspend fun getUnits(@Header("Authorization") token: String,@Path("sessionId") session: String, @Query("mobile") boolean: Boolean = true): Units
 }
 
 object GlobarApi {

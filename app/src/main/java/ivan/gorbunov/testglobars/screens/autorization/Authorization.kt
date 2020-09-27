@@ -37,7 +37,7 @@ class Authorization : Fragment() {
         val viewModel = ViewModelProvider(this).get(AuthorizationViewModel::class.java)
 
         buttonEnter.setOnClickListener {
-            getToken(viewModel, nameField.text.toString(), passwordField.text.toString())
+            getToken(viewModel, nameField.text.toString().trim(), passwordField.text.toString().trim())
             progressBar.visibility = View.VISIBLE
         }
 
