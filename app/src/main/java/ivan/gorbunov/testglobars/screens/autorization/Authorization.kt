@@ -1,5 +1,6 @@
 package ivan.gorbunov.testglobars.screens.autorization
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -49,7 +50,7 @@ class Authorization : Fragment() {
                     )
                 } else {
                     progressBar.visibility = View.GONE
-                    buildDialog()
+                    buildDialog(viewModel)
                 }
             }
         })
@@ -62,8 +63,13 @@ class Authorization : Fragment() {
         viewModel.getToken(user)
     }
 
-    private fun buildDialog() {
-
+    private fun buildDialog(viewModel: AuthorizationViewModel) {
+        val builder = AlertDialog.Builder(activity)
+        val msg = viewModel.token.value?.replaceFirst("Bearer ", "")
+        builder.setMessage("$msg\nPlease,try again")
+            .setTitle("Error")
+        val dialog = builder.create()
+        dialog.show()
     }
 
 

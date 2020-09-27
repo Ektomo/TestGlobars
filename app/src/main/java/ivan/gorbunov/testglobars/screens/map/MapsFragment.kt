@@ -1,10 +1,7 @@
 package ivan.gorbunov.testglobars.screens.map
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -23,6 +20,8 @@ class MapsFragment : Fragment() {
     private lateinit var viewModel: MapsViewModel
     private lateinit var units: MutableList<UnitTest>
     private lateinit var progressBar: ProgressBar
+    private lateinit var menuMy: Menu
+    private lateinit var mapGoogle: GoogleMap
 
 
     override fun onCreateView(
@@ -40,7 +39,6 @@ class MapsFragment : Fragment() {
         progressBar = root.findViewById(R.id.progressBarMap)
         setHasOptionsMenu(true)
 
-
         return root
     }
 
@@ -51,12 +49,18 @@ class MapsFragment : Fragment() {
         viewModel.units.observe(viewLifecycleOwner, { list ->
             list.forEach { if (it.checked) units.add(it) }
             mapFragment?.getMapAsync(callback)
+            updateMenu()
             progressBar.visibility = View.GONE
         })
     }
 
-    private val callback = OnMapReadyCallback { map ->
+    private fun updateMenu() {
+        createItemMenu(menuMy)
+        onPrepareOptionsMenu(menuMy)
+    }
 
+    private val callback = OnMapReadyCallback { map ->
+        mapGoogle = map
         units.forEach {
             makeMarker(map, it)
         }
@@ -65,10 +69,7 @@ class MapsFragment : Fragment() {
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(firstPosition, 10f))
     }
 
-    private fun makeMarker(
-        map: GoogleMap,
-        it: UnitTest
-    ) {
+    private fun makeMarker(map: GoogleMap, it: UnitTest) {
         val icons = IconGenerator(activity)
         map.addMarker(
             MarkerOptions().position(LatLng(it.position.lt, it.position.ln))
@@ -76,16 +77,28 @@ class MapsFragment : Fragment() {
         ).setIcon(BitmapDescriptorFactory.fromBitmap(icons.makeIcon(it.name)))
     }
 
-//    override fun onPrepareOptionsMenu(menu: Menu) {
-//        createItemMenu(menu)
-//        return super.onPrepareOptionsMenu(menu)
-//    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        menuMy = menu
+        return super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        cameraOnItem(item)
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun cameraOnItem(item: MenuItem) {
+        val unit = units[item.itemId]
+        val position = LatLng(unit.position.lt, unit.position.ln)
+        mapGoogle.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 15f))
+    }
 
 
-//    private fun createItemMenu(menu: Menu) {
-//        units.forEach { _ ->
-//            menu.add(0, units.indexOf(it), Menu.NONE, it.name)
-//        }
-//    }
+    private fun createItemMenu(menu: Menu) {
+        units.forEach {
+            menu.add(Menu.NONE, units.indexOf(it), Menu.NONE, it.name)
+        }
+    }
 
 }
