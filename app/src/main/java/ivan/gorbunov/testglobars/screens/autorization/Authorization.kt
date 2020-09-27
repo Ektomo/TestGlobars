@@ -1,60 +1,70 @@
 package ivan.gorbunov.testglobars.screens.autorization
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ProgressBar
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import ivan.gorbunov.testglobars.R
+import ivan.gorbunov.testglobars.model.retrofit.data.UserLogin
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [Authorization.newInstance] factory method to
- * create an instance of this fragment.
- */
 class Authorization : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var nameField: EditText
+    private lateinit var passwordField: EditText
+    private lateinit var buttonEnter: Button
+    private lateinit var progressBar: ProgressBar
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_authorization, container, false)
-    }
+        val root = inflater.inflate(R.layout.fragment_authorization, container, false)
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment Authorization.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            Authorization().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+        nameField = root.findViewById(R.id.user_edit_text)
+        passwordField = root.findViewById(R.id.password_edit_text)
+        buttonEnter = root.findViewById(R.id.button_enter)
+        progressBar = root.findViewById(R.id.progressBar)
+
+        val viewModel = ViewModelProvider(this).get(AuthorizationViewModel::class.java)
+
+        buttonEnter.setOnClickListener {
+            getToken(viewModel, nameField.text.toString(), passwordField.text.toString())
+            progressBar.visibility = View.VISIBLE
+        }
+
+        viewModel.token.observe(viewLifecycleOwner, { tokenA ->
+            tokenA?.let {
+                if (viewModel.isSuccess.value!!) {
+                    this.findNavController().navigate(
+                        AuthorizationDirections.actionAuthorizationToMapsFragment(tokenA)
+                    )
+                } else {
+                    progressBar.visibility = View.GONE
+                    buildDialog()
                 }
             }
+        })
+
+        return root
     }
+
+    private fun getToken(viewModel: AuthorizationViewModel, name: String, password: String) {
+        val user = UserLogin(name, password)
+        viewModel.getToken(user)
+    }
+
+    private fun buildDialog() {
+
+    }
+
+
 }
